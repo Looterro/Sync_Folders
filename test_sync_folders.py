@@ -48,6 +48,8 @@ def test_synchronization():
         assert not os.path.exists(replica_file1_path)
 
     finally:
+
+        #remove the temporary folders and files
         shutil.rmtree(source_dir)
         shutil.rmtree(replica_dir)
         os.remove(log_file)
