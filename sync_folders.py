@@ -29,8 +29,9 @@ def sync_folders(source_path, replica_path, log_path):
     #open the log file in append mode
     with open(log_path, "a") as log_file:
 
-        #initialize the log file with the current time of synchronization after a change
+        #initialize the log file and console log with the current time of synchronization after a change
         log_file.write("Sync started at: {}\n".format(time.ctime()))
+        print("Sync started at: {}\n".format(time.ctime()))
 
         #copy new or updated files from the source folder to the replica folder
         for root, dirs, files in os.walk(source_path):
@@ -48,7 +49,10 @@ def sync_folders(source_path, replica_path, log_path):
                 #if the file doesn't exist in the replica folder, copy it
                 if source_md5 != replica_md5:
                     shutil.copy2(source_file_path, replica_file_path)
+
+                    #log the action
                     log_file.write("Copied: {}\n".format(replica_file_path))
+                    print("Copied: {}\n".format(replica_file_path))
 
         #remove files not present in the source folder in the replica folder
         for root, dirs, files in os.walk(replica_path):
@@ -63,10 +67,12 @@ def sync_folders(source_path, replica_path, log_path):
                 if not os.path.exists(source_file_path):
                     os.remove(replica_file_path)
                     log_file.write("Removed: {}\n".format(replica_file_path))
+                    print("Removed: {}\n".format(replica_file_path))
 
 
-        #write a message at the end of the synchronization
+        #log the end of the synchronization
         log_file.write("Sync completed at: {}\n".format(time.ctime()))
+        print("Sync completed at: {}\n".format(time.ctime()))
 
 if __name__ == "__main__":
 
