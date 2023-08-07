@@ -1,6 +1,7 @@
 import os
 import time
 import shutil
+import sys
 
 #calulate the message digest of a file
 def calculate_md5(file_path):
@@ -38,3 +39,23 @@ def sync_folders(source_path, replica_path, log_path):
 
             #write a message at the end of the synchronization
             log_file.write("Sync completed at: {}\n".format(time.ctime()))
+
+if __name__ == "__main__":
+
+    #check if the number of arguments is correct
+    #if not, print the usage information and exit
+    if len(sys.argv) != 5:
+        print("Usage: python3 sync_folders.py source_folder(folder path) replica_folder(folder path) sync_interval(number) log_file(file path)")
+        sys.exit(1)
+
+    #get the arguments in the following order:
+    #source_folder, replica_folder, sync_interval, log_file
+    source_path = sys.argv[1]
+    replica_path = sys.argv[2]
+    sync_interval = int(sys.argv[3])
+    log_path = sys.argv[4]
+
+    #sync the folders every sync_interval seconds
+    while True:
+        sync_folders(source_path, replica_path, log_path)
+        time.sleep(sync_interval)
