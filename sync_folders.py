@@ -10,7 +10,7 @@ def calculate_md5(file_path):
     #create a md5 hash object
     hash_md5 = hashlib.md5()
 
-    #read the file in chunks of 4096 bytes
+    #read the file in binary mode
     with open(file_path, "rb") as f:
         for chunk in iter(lambda: f.read(4096), b""):
             #update the hash object with the chunk
@@ -26,19 +26,20 @@ def sync_folders(source_path, replica_path, log_path):
     if not os.path.exists(replica_path):
         os.makedirs(replica_path)
 
-    #initialize the log file with the current time of synchronization after a change
+    #open the log file in append mode
     with open(log_path, "a") as log_file:
+
+        #initialize the log file with the current time of synchronization after a change
         log_file.write("Sync started at: {}\n".format(time.ctime()))
 
-        #for each file in the source folder
-        #check if it exists in the replica folder
+        #copy new or updated files from the source folder to the replica folder
         for root, dirs, files in os.walk(source_path):
 
             for filename in files:
 
                 #get the path of the file in the source folder and the replica
                 source_file_path = os.path.join(root, filename)
-                replica_file_path = os.path.join(replica_path, os.path.relpath(surce_file_path, source_path))
+                replica_file_path = os.path.join(replica_path, os.path.relpath(source_file_path, source_path))
                 
                 #calculate the md5 of the file in the source folder and the replica if it exists
                 source_md5 = calculate_md5(source_file_path)
@@ -49,8 +50,23 @@ def sync_folders(source_path, replica_path, log_path):
                     shutil.copy2(source_file_path, replica_file_path)
                     log_file.write("Copied: {}\n".format(replica_file_path))
 
-            #write a message at the end of the synchronization
-            log_file.write("Sync completed at: {}\n".format(time.ctime()))
+        #remove files not present in the source folder in the replica folder
+        for root, dirs, files in os.walk(replica_path):
+
+            for filename in files:
+                
+                #get the paths
+                replica_file_path = os.path.join(root, filename)
+                source_file_path = os.path.join(source_path, os.path.relpath(replica_file_path, replica_path))
+
+                #if the file doesn't exist in the source folder, remove it and log it
+                if not os.path.exists(source_file_path):
+                    os.remove(replica_file_path)
+                    log_file.write("Removed: {}\n".format(replica_file_path))
+
+
+        #write a message at the end of the synchronization
+        log_file.write("Sync completed at: {}\n".format(time.ctime()))
 
 if __name__ == "__main__":
 
