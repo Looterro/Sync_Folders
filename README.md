@@ -8,9 +8,9 @@ In project directory run:
 
 `python3 sync_folders.py source_folder(folder path) replica_folder(folder path) sync_interval(number) log_file(file path)`
 
-For tests run:
+For tests check for pytest package and run:
 
-`python3 -m unittest test_sync_folders.py`
+`pytest test_sync_folders.py`
 
 ### Functionality
 
@@ -26,4 +26,4 @@ For tests run:
 
 • Python3 with the built-in shutil library to perform the synchronization and hashlib library to calculate MD5 hashes
 
-• UnitTest
+• Pytest for tests
