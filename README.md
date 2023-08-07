@@ -6,11 +6,11 @@ A program that synchronizes two folders. The program maintains a full, identical
 
 In project directory run:
 
-### `python3 sync_folders.py source_folder(folder path) replica_folder(folder path) sync_interval(number) log_file(file path)`
+`python3 sync_folders.py source_folder(folder path) replica_folder(folder path) sync_interval(number) log_file(file path)`
 
 For tests run:
 
-### `python3 -m unittest test_sync_folders.py`
+`python3 -m unittest test_sync_folders.py`
 
 ### Functionality
 
