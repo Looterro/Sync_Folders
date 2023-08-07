@@ -2,10 +2,22 @@ import os
 import time
 import shutil
 import sys
+import hashlib
 
 #calulate the message digest of a file
 def calculate_md5(file_path):
-    pass
+
+    #create a md5 hash object
+    hash_md5 = hashlib.md5()
+
+    #read the file in chunks of 4096 bytes
+    with open(file_path, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            #update the hash object with the chunk
+            hash_md5.update(chunk)
+
+    #return the hex digest of the file
+    return hash_md5.hexdigest()
 
 #main function to sync the source folder with the replica folder
 def sync_folders(source_path, replica_path, log_path):
